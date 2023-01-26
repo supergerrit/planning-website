@@ -12,7 +12,37 @@
     <div class="row">
         <div class="col m12 s12">
             <div class="card-panel">
-                <p><i>Best te bekijken in landschapsmodus</i> <i class="small rotate_left">insert_chart</i></p>
+                {# <p><i>Best te bekijken in landschapsmodus</i> <i class="small rotate_left">insert_chart</i></p> #}
+                <div class="row">
+
+                    <div class="col m3 s3 offset-m1 offset-s1">
+                        <a href="{% url 'vandaag' %}?date={{ prev }}"><<<<</a>
+                    </div>
+
+                    <div class="col m4 s4">
+                        <form method="POST" class="post-form" id="form1">
+                            {% csrf_token %}
+                            {% for field in zoekdateform %}
+
+                                {% if field.errors %}
+                                    <ul>
+                                        {% for error in field.errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+
+                                {{ field }}
+
+                            {% endfor %}
+                        </form>
+                    </div>
+
+                    <div class="col m3 s3">
+                        <a href="{% url 'vandaag' %}?date={{ next }}">>>>></a>
+                    </div>
+                </div>
+                {#  button type="submit" class="save btn btn-default">Zoeken</button>#}
                 <div style="height: 1000px">
                     <canvas id="myChart"></canvas>
                 </div>
@@ -75,6 +105,19 @@
             document.getElementById('myChart'),
             config
         );
+    </script>
+
+
+    <script>
+        $('#id_date').change(function () {
+            console.log('Submiting form');
+            $('#form1').submit();
+        });
+    </script>
+
+    <script>
+        $('#id_date').val("{{ date }}");
+        $('#id_date').attr("novalidate", "");
     </script>
 
 {% endblock %}

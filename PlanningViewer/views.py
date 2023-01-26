@@ -672,7 +672,19 @@ class WerktijdViewSet(viewsets.ViewSet):
 
 @login_required
 def vandaag(request):
-    aanwezigen = Werktijd.objects.filter(datum=datetime.now().date()).order_by('begintijd')
+    dtm = datetime.now().date()
+
+    if 'date' in request.GET:
+        dtm = datetime.strptime(request.GET.get("date"), "%d-%m-%Y")
+    else:
+        dtm = datetime.now().date()
+
+    if request.method == 'POST':
+        zoekdateform = DateSelectForm(request.POST)
+        if zoekdateform.is_valid():
+            dtm = zoekdateform.cleaned_data['date']
+
+    aanwezigen = Werktijd.objects.filter(datum=dtm).order_by('begintijd')
 
     personen = []
     uren = []
@@ -685,7 +697,11 @@ def vandaag(request):
         uren.append([t_to_float(w.begintijd), t_to_float(w.eindtijd)])
 
     context = {
-        'data': [personen, uren]
+        'data': [personen, uren],
+        'zoekdateform': DateSelectForm(request.POST),
+        'next': datetime.strftime(dtm + timedelta(days=1), "%d-%m-%Y"),
+        'prev': datetime.strftime(dtm - timedelta(days=1), "%d-%m-%Y"),
+        'date': datetime.strftime(dtm, "%Y-%m-%d"),
     }
     return render(request, 'PlanningViewer/vandaag.html', context)
 
