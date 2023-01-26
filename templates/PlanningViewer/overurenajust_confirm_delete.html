@@ -1,0 +1,16 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <form method="post">{% csrf_token %}
+                    <p>Weet u zeker dat u "{{ object }}" wilt verwijderen?</p>
+                    <input type="submit" value="Verwijder" class="btn waves-effect">
+                </form>
+                <br>
+                <a href="{% url 'overuren' %}">Ga terug</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

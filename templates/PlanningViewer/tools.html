@@ -1,0 +1,129 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{# Calculate intersect #}
+{# Export planning csv #}
+{# Generate ical key #}
+{# Stats view #}
+
+{% block content %}
+    <br>
+    {# Calculate intersect #}
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <strong id="intersect">Overlappende werkijden van uzelf en een andere persoon berekenen.</strong>
+                <form method="GET" action="{% url 'personen_intersect' %}" class="post-form">
+                    {% csrf_token %}
+                    <table border="1">
+                        {% for field in intersectfrom %}
+                            <tr>
+                                <th>{{ field.label_tag }}</th>
+                                <td>
+                                    {% if field.errors %}
+                                        <ul>
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <br/>{{ field.help_text }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <br>
+                    <button type="submit" class="save btn btn-default">Overlappende werktijden berekenen</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    {# Stats view #}
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <strong id="stats">Gegevens per periode bekijken.</strong>
+                <p>Aantal gewerkte uren, aantal uren pauze, voorspelling salaris.</p>
+                <div class="card-action">
+                    <a href="{% url 'stats' %}" class="waves-effect waves-light btn">Samenvatting bekijken</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Next payout #}
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <strong id="nextpayout">Uitbetaling 💰</strong>
+                <div class="card-action">
+                    <p>Volgende uitbetaling: {{ closest }}</p>
+                    <p>Dat is nog {{ ndays }} dagen!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Next payout #}
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <strong id="nextpayout">Werknemer van de maand 🤩</strong>
+                <div class="card-action">
+                    <p>En de werknemer van vorige maand ({{ eerste_d }}) is ... <br>
+                        {{ wvdm.0.voornaam }}! Hij was maar liefst {{ wvdm.0.num }} dagen aanwezig!</p>
+
+                    <p> 1. {{ wvdm.0.voornaam }}: {{ wvdm.0.num }} dagen.</p>
+                    <p> 2. {{ wvdm.1.voornaam }}: {{ wvdm.1.num }} dagen.</p>
+                    <p> 3. {{ wvdm.2.voornaam}}: {{ wvdm.2.num }} dagen.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Generate ical key #}
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <strong id="ical">API-key en iCal-link genereren, om uw werktijden aan een agenda toe te
+                    voegen.</strong>
+                <div class="card-action">
+                    <a href="{% url 'create_api_key' %}" class="waves-effect waves-light btn">Genereer API-key voor
+                        iCal</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <ul class="collapsible">
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">expand_more</i>Geavanceerde opties</div>
+                    <div class="collapsible-body" style="display: block;padding-left: 1rem;padding-right: 1rem;">
+                        {# Export planning csv #}
+                        <div class="card-panel">
+                            <strong id="export">Gegevens exporteren in CSV-formaat voor externe analyse.</strong>
+                            <div class="card-action">
+                                <a href="{% url 'export_data' %}" class="waves-effect waves-light btn">Exporteer
+                                    gegevens</a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('.collapsible').collapsible();
+        });
+    </script>
+{% endblock %}

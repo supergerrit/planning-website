@@ -1,0 +1,43 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+
+    <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <span class="card-title">De volgende personen zijn nu aanwezig</span>
+                <table class="striped">
+                    <thead>
+                    <tr>
+                        <th>Persoon</th>
+                        <th>Tijd</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for persoon in aanwezigen %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'details_persoon' %}?voornaam={{ persoon.voornaam }}&achternaam={{ persoon.achternaam }}">{{ persoon.fullname }}</a>
+                            </td>
+                            <td><a href="{% url 'details' persoon.id %}">{{ persoon.begintijd }}
+                                - {{ persoon.eindtijd }}</a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="card-panel">
+                <a href="{% url 'vandaag' %}" style="color: dodgerblue;">Bekijk schematisch overzicht van vandaag.</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{
+  "name": "Jumbo Planning",
+  "short_name": "Jumbo Planning",
+  "start_url": "/",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#FFF",
+  "theme_color": "#29b6f6",
+  "description": "Jumbo werktijden app en meer.",
+  "dir": "ltr",
+  "lang": "nl-NL",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/static/jumboIcon96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/static/jumboIcon192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/static/jumboIcon512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

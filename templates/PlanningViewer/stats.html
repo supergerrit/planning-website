@@ -1,0 +1,92 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+
+    {% include 'PlanningViewer/jssnip/datatable.html' %}
+
+    <div class="row">
+        <div class="card-panel">
+            <strong>Overzicht uren per maand.</strong>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="input-field">
+                    {{ yearselect.as_p }}
+                </div>
+                <input type="submit" value="Gegevens opvragen">
+            </form>
+
+            <p>Huidige periode: {{ periode_now }}</p>
+            <table class="display nowrap" id="table1" style="width:100%">
+                <thead>
+                <tr>
+                    <th>Periode</th>
+                    <th>Datum</th>
+                    <th>Uren gewerkt</th>
+                    <th>Uren pauze</th>
+                    <th>Waarvan zondag</th>
+                    <th>Netto uren</th>
+                    <th>Loon</th>
+                    <th><i class="material-icons">remove_red_eye</i></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for maand in m_uren %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ maand.start }} - {{ maand.eind }}</td>
+                        <td>{{ maand.totaal_uur }}</td>
+                        <td>{{ maand.totaal_pauze }}</td>
+                        <td>{{ maand.totaal_zondag }}</td>
+                        <td>{{ maand.netto }}</td>
+                        <td> 💶{{ maand.verdiend|floatformat:2 }}</td>
+                        <td><a href="{% url 'periode_view' maand.year forloop.counter %}"><i class="material-icons">remove_red_eye</i></a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+
+    {% comment %}
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <div class="card-content">
+                    <span class="card-title"><strong>Uitleg</strong></span>
+                    <p>Hierboven vind u een overzicht met de afgelopen salaris-periodes van dit jaar, alle door u
+                        gemaakte uren worden bij elkaar opgeteld en hierboven weergegeven.
+                        Vervolgens wordt het salaris voor deze periode voorspeld.</p>
+                    <ul>
+                        <li>Periode: nummer van de periode</li>
+                        <li>Datum: looptijd van de periode</li>
+                        <li>Uren gewerkt: alle aanwezige uren bij elkaar opgeteld</li>
+                        <li>Uren pauze: alle uren pauze bij elkaar opgeteld</li>
+                        <li>Waarvan zondag: alle uren gemaakt op zondag</li>
+                        <li>Netto uren: uren_gewerkt - uren_pauze</li>
+                        <li>Loon (voorspelling): (uren_gewerkt-uren_pauze)*loon*1.17 + uren_zondag*loon</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endcomment %}
+
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#table1').DataTable({
+                "paging": false,
+                "scrollX": true,
+                "searching": false
+            });
+            $('select').formSelect();
+
+            //           $('select').change(function() {
+            //                this.form.submit();
+            //           });
+        });
+    </script>
+
+{% endblock %}

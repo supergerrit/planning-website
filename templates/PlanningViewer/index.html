@@ -1,0 +1,33 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+    <br>
+    <div class="row">
+        <div class="col m8 offset-m2 s12" style="padding-left: 5px; padding-right: 5px;">
+            <ul class="tabs tabs-fixed-width" style="background-color: #FAFAFA; overflow: hidden">
+                {% for p in werktijden %}
+                    <li class="tab col s3"><a href="#w{{ forloop.counter }}">{{ p.0.voornaam }}</a></li>
+                {% endfor %}
+            </ul>
+
+            {% for persoon in werktijden %}
+                <div id="w{{ forloop.counter }}">
+                    {% include 'PlanningViewer/werktijden_view.html' with werktijden=persoon %}
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('.tabs').tabs();
+        });
+    </script>
+
+    <script>
+        posthog.identify('{{ request.user.pk }}', { name: '{{ request.user.get_full_name }}' });
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#29b6f6">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>#}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    {% load static %}
+    <link rel="apple-touch-icon" sizes="288x288" href="{% static "jumboIcon.png" %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static "jumboIcon.png" %}">
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <title>Jumbo Planning</title>
+    <style>
+        .container {
+            width: 100%;
+        }
+
+        table.striped > tbody > tr:nth-child(odd) {
+            background-color: #F5F5F5;
+        }
+
+        .card-panel {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+    </style>
+
+{% include "PlanningViewer/ph.html" %}
+
+</head>
+<body style="background-color: #FAFAFA">
+<nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="{% url 'index' %}" class="brand-logo"><img
+            src="{% static "jumboIcon.png" %}" alt="Jumbo Planning" width="auto" height="64"></a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="{% url 'index' %}">Overzicht</a></li>
+            <li><a href="{% url 'nu_aanwezig' %}">Nu aanwezig</a></li>
+            <li><a href="{% url 'zoeken' %}">Zoeken</a></li>
+            <li><a href="{% url 'toevoegen' %}">Toevoegen</a></li>
+            <li><a href="{% url 'stats' %}">Samenvatting</a></li>
+            {% if request.user.usersettings.contract_uren > 0 %}
+                <li><a href="{% url 'overuren' %}">Overuren</a></li>{% endif %}
+            <li><a href="{% url 'tools' %}">Tools</a></li>
+            <li><a href="{% url 'instellingen' request.user.usersettings.id %}">Instellingen</a></li>
+            <li><a href="{% url 'logout' %}"><i class="material-icons">exit_to_app</i></a></li>
+        </ul>
+
+        <ul id="nav-mobile" class="sidenav">
+            <li><a href="{% url 'index' %}">Overzicht</a></li>
+            <li><a href="{% url 'nu_aanwezig' %}">Nu aanwezig</a></li>
+            <li><a href="{% url 'zoeken' %}">Zoeken</a></li>
+            <li><a href="{% url 'toevoegen' %}">Toevoegen</a></li>
+            <li><a href="{% url 'stats' %}">Samenvatting</a></li>
+            {% if request.user.usersettings.contract_uren > 0 %}
+                <li><a href="{% url 'overuren' %}">Overuren</a></li>{% endif %}
+            <li><a href="{% url 'tools' %}">Tools</a></li>
+            <li><a href="{% url 'instellingen' request.user.usersettings.id %}">Instellingen</a></li>
+            <li><a href="{% url 'logout' %}"><i class="material-icons">exit_to_app</i></a></li>
+        </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+</nav>
+
+<div class="container center-align">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div {% if message.tags %} class="card-panel {{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.sidenav').sidenav();
+    });
+</script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('{% url "sw.js" %}', {scope: '/'}).then(function (reg) {
+            // registration worked
+            console.log('Registration succeeded. Scope is ' + reg.scope);
+        }).catch(function (error) {
+            // registration failed
+            console.log('Registration failed with ' + error);
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col m8 offset-m2 s12">
+            <div class="card-panel">
+                <p>Uw API-key is: {{ apikey }}</p>
+                <p>Om de jumbo werktijden in uw agenda up te slaan, voeg de volgende link to als een agendabron: <a
+                        href="https://{{ host }}/api/ical?key={{ apikey }}">https://{{ host }}/api/ical?key={{ apikey }}</a>
+                </p>
+                <br>
+
+                {#                <div class="card-panel red">#}
+                {#                    <span class="white-text">Houd u API-key en link geheim. Deze bied volledige toegang tot uw gegevens!</span>#}
+                {#                </div>#}
+            </div>
+        </div>
+    </div>
+{% endblock %}

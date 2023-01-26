@@ -1,0 +1,43 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+
+    <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <span class="card-title"><strong>Favoriet toevoegen</strong></span>
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="save btn btn-default">Opslaan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <span class="card-title"><strong>Huidige favorieten</strong></span>
+                <table class="striped">
+                    {% for p in favorieten %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'details_persoon' %}?voornaam={{ p.f_voornaam }}&achternaam={{ p.f_achternaam }}">{{ p.fullname }}</a>
+                            </td>
+                            <td><a href="{% url 'fav_delete' p.id%}"><i class="material-icons">delete</i></a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

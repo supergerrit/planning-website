@@ -1,0 +1,7 @@
+venv/
+venv2/
+__pycache__/
+.idea/
+tmp/
+.env
+templates/PlanningViewer/ph.html

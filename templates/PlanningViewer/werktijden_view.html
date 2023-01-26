@@ -1,0 +1,31 @@
+<table class="striped">
+    <thead>
+    <tr>
+        <th id="week_head">Week</th>
+        <th>Dag</th>
+        <th>Datum</th>
+        <th>Tijd</th>
+        <th>Totaal</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for werktijd in werktijden %}
+        <tr class="clickable-row {% if werktijd.vandaag %}green accent-1{% endif %} {% if werktijd.extra %}yellow accent-1{% endif %}"
+            data-href='{% url 'details' werktijd.id %}'>
+            <td>{{ werktijd.week }}</td>
+            <td>{{ werktijd.dag }}</td>
+            <td>{{ werktijd.datum|date:"j F" }}</td>
+            <td>{{ werktijd.begintijd }} - {{ werktijd.eindtijd }}</td>
+            <td><span {% if werktijd.overwerk != 0 %}style="color: red; "{% endif %}>{{ werktijd.totaal }}</span></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    if (screen.width <= 370){
+        document.getElementById("week_head").innerHTML = "Wk";
+    }
+</script>
+
+{% include 'PlanningViewer/jssnip/clickabletable.html' %}

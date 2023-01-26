@@ -1,0 +1,70 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <p style="font-weight: bold">Resultaten voor: {{ fname }}</p>
+                <span class="card-title">Hieronder kun je zien of je mogelijk nog geld terugkrijgt.
+                    Het werkt alsvolgt: als een van de getallen hieronder 6/12 of hoger aangeeft, heb je waarschijnlijk nog geld tegoed.
+                Aangezien deze dagen volgens de CAO doorbetaald zouden moeten worden, ook als je niet aan het werkt bent, alleen gebeurd dit meestal niet.</span>
+
+                <br>
+
+                <p style="font-weight: bold">Zoeken</p>
+                <form class="col s12" method="get">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input name="voornaam" id="voornaam" type="text" class="validate" value="{{ vnaam }}">
+                            <label for="voornaam">Voornaam</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input name="achternaam" id="achternaam" type="text" class="validate" value="{{ anaam }}">
+                            <label for="achternaam">Achternaam</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select name="jaar">
+                                {% for i in years %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                            <label>Jaar</label>
+                        </div>
+                    </div>
+                    <button class="btn waves-effect waves-light" type="submit">Zoeken</button>
+                </form>
+
+                <table class="striped">
+                    <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Aantal</th>
+                        <th>Data</th>
+                        <th>Gem uren</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in results %}
+                        <tr>
+                            <td>{{ r.0 }}</td>
+                            <td {% if r.1 >= 6 %}style="color:forestgreen" {% endif %}>{{ r.1 }}/12</td>
+                            <td>{{ r.2 }}</td>
+                            <td>{{ r.3|floatformat:3 }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('select').formSelect();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <span class="card-title"><strong>Persoon info</strong></span>
+                <p>Werktijden voor {{ werktijden.0.fullname }}</p>
+
+                {% include 'PlanningViewer/werktijden_view.html' with werktijden=werktijden %}
+
+            </div>
+        </div>
+    </div>
+    <br>
+
+    {% include 'PlanningViewer/jssnip/clickabletable.html' %}
+
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+
+    <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .dot {
+            height: 25px;
+            width: 25px;
+            background-color: #bbb;
+            border-radius: 50%;
+            /*border: 1px solid #000000;*/
+            display: inline-block;
+        }
+    </style>
+    <br>
+    <div class="row">
+        <div class="col m10 offset-m2 s12">
+            <div class="col m5 s12">
+                <div class="card-panel">
+                    <span class="card-title">Zoeken op datum</span>
+                    <form method="POST" class="post-form">
+                        {% csrf_token %}
+                        <table border="1">
+                            {% for field in zoekdateform %}
+                                <tr>
+                                    <th>{{ field.label_tag }}</th>
+                                    <td>
+                                        {% if field.errors %}
+                                            <ul>
+                                                {% for error in field.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <br/>{{ field.help_text }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        <br>
+                        <button type="submit" class="save btn btn-default">Zoeken</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col m5 s12">
+                <div class="card-panel">
+                    <span class="card-title">Zoeken op persoon</span>
+                    <form method="POST" class="post-form">
+                        {% csrf_token %}
+                        <table border="1">
+                            {% for field in zoekpersoonform %}
+                                <tr>
+                                    <th>{{ field.label_tag }}</th>
+                                    <td>
+                                        {% if field.errors %}
+                                            <ul>
+                                                {% for error in field.errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <br/>{{ field.help_text }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        <br>
+                        <button type="submit" class="save btn btn-default">Zoeken</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <br>
+
+    {% if dateoutput %}
+        <div class="row">
+            <div class="col m10 offset-m1 s12">
+                <div class="card-panel">
+                    <span class="card-title">Zoekresultaten</span>
+                    <table class="striped">
+                        <thead>
+                        <tr>
+                            <th>Persoon</th>
+                            <th>Tijd</th>
+                            <th>Kleuren</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for persoon in dateoutput %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'details_persoon' %}?voornaam={{ persoon.0.voornaam }}&achternaam={{ persoon.0.achternaam }}">{{ persoon.0.fullname }}</a>
+                                </td>
+                                <td><a href="{% url 'details' persoon.0.id %}">{{ persoon.0.begintijd }}
+                                    - {{ persoon.0.eindtijd }}</a>
+                                </td>
+                                <td> {% for k in persoon.1 %}
+                                    <span class="dot" style="background-color: {{ k }}"></span>
+                                {% endfor %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

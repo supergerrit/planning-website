@@ -1,0 +1,162 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+
+    <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
+
+        .dot {
+            height: 25px;
+            width: 25px;
+            background-color: #bbb;
+            border-radius: 50%;
+            /*border: 1px solid #000000;*/
+            display: inline-block;
+        }
+
+        .smalldot {
+            height: 12px;
+            width: 12px;
+            background-color: #bbb;
+            border-radius: 50%;
+            /*border: 1px solid #000000;*/
+            display: inline-block;
+        }
+    </style>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Overwerk toevoegen</h4>
+            <p>Selecteer het aantal minuten dat je langer bent gebleven.</p>
+            <form action="{{ request.path }}" method="post" id="range_form">
+                {% csrf_token %}
+                <p class="range-field">
+                    <label for="overwerk_range" id="overwerk_label">Overwerk: {{ werktijd.overwerk }}</label>
+                    <input type="range" id="overwerk_range" name="overwerk_range" min="0" max="120" step="15"
+                           value="{{ werktijd.overwerk }}" oninput="DisplayChange(this.value)"/>
+                </p>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-close waves-effect btn-flat" type="submit" form="range_form">Opslaan</button>
+            <button class="modal-close waves-effect btn-flat">Afbreken</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <span class="card-title">Werktijd info</span>
+                {% if werktijd.extra %}
+                    <span class="new badge red" data-badge-caption="Let op: extra werktijd!"></span>
+                {% endif %}
+                <table class="striped">
+                    <tr>
+                        <td>Persoon</td>
+                        <td>{{ werktijd.fullname }}</td>
+                    </tr>
+                    <tr>
+                        <td>Datum</td>
+                        <td>{{ werktijd.dag }} {{ werktijd.datum }}</td>
+                    </tr>
+                    <tr>
+                        <td>Tijd</td>
+                        <td>{{ werktijd.begintijd }} - {{ werktijd.eindtijd }}
+                            {% if werktijd.overwerk != 0 %}
+                                <span style="font-size: small; color: red; ">+ {{ werktijd.overwerk }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Pauze</td>
+                        <td>{{ werktijd.pauze }}</td>
+                    </tr>
+                    <tr>
+                        <td>Totaal</td>
+                        <td>{{ werktijd.totaal }}</td>
+                    </tr>
+                    <tr>
+                        <td>Kleuren</td>
+                        <td>
+                            {% for k in kleuren %}
+                                <span class="dot" style="background-color: {{ k.0 }}" data-tippy-content="{{ k.1 }}"></span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% if delete_permission %}
+                        <table>
+                            <tr>
+                                <td><a href="{% url 'wt_update' werktijd.id %}"><i class="material-icons">edit</i></a>
+                                </td>
+                                <td><a href="{% url 'wt_delete' werktijd.id %}"><i class="material-icons">delete</i></a>
+                                </td>
+                                <td><a href="#modal1" class="material-icons modal-trigger"><i
+                                        class="material-icons">update</i></a></td>
+                            </tr>
+                        </table>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <span class="card-title">Aanwezigen{% if marker %} ⭐{% endif %}</span>
+                <table class="striped">
+                    <thead>
+                    <tr>
+                        <th>Persoon</th>
+                        <th>Tijd</th>
+                        <th>Kleur</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for persoon in aanwezigen %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'details_persoon' %}?voornaam={{ persoon.voornaam }}&achternaam={{ persoon.achternaam }}">{{ persoon.fullname }}</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'details' persoon.id %}">{{ persoon.begintijd }} - {{ persoon.eindtijd }}</a>
+                            </td>
+                            <td>
+                                {% for c in persoon.get_colors %}
+{#                                    <span style="color: {{ c }}; font-weight: bold">|</span>#}
+                                    <span class="smalldot" style="background-color: {{ c }}"></span>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.modal').modal();
+        });
+
+        function DisplayChange(newvalue) {
+            document.getElementById("overwerk_label").innerHTML = "Overwerk: " + newvalue + " min";
+        }
+
+        tippy('[data-tippy-content]');
+    </script>
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,47 @@
+version: '3'
+
+volumes:
+  mysqldata:
+
+services:
+  jumbo_web:
+    build: .
+    #    command: bash -c "python manage.py runserver 0.0.0.0:80"
+    container_name: jumbo_website_backend
+    #    restart: always
+    volumes:
+      - .:/jumbo_website
+      - ./static:/jumbo_website/static  # <-- bind the static volume
+      - ./media:/jumbo_website/media  # <-- bind the media volume
+
+  jumbo_nginx:
+    image: nginx:latest
+    container_name: jumbo_website_nginx
+    #    restart: always
+    volumes:
+      - ./config:/etc/nginx/conf.d
+      - ./static:/jumbo_website/static  # <-- bind the static volume
+      - ./media:/jumbo_website/media  # <-- bind the media volume
+    depends_on:
+      - jumbo_web
+    ports:
+      - "8000:80"
+
+  db:
+    image: mysql
+    container_name: djangodb
+    command: --default-authentication-plugin=mysql_native_password
+    #    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: djangoroot
+      MYSQL_DATABASE: django
+      MYSQL_USER: django
+      MYSQL_PASSWORD: django
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    #    restart: always
+    ports:
+      - "8080:8080"

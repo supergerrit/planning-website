@@ -1,0 +1,12 @@
+{% extends "PlanningViewer/base.html" %}
+
+{% block content %}
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <span class="card-title"><strong>U bent nu uitgelogd!<</strong></span>
+                <a href="{% url 'login' %}">Klik hier om opnieuw in te loggen.</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

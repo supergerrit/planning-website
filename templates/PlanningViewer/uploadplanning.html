@@ -1,0 +1,20 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+    <h3>Nieuwe planning uploaden</h3>
+
+    <div class="row">
+        <div class="col m6 offset-m3 s12">
+            <div class="card-panel">
+                <form method="POST" class="post-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ uploadform.as_p }}
+                    <br>
+                    <button type="submit" class="save btn btn-default">Opslaan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

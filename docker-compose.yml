@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  jumbo_web:
+    build: .
+#    command: bash -c "python manage.py runserver 0.0.0.0:80"
+    container_name: jumbo_website_backend
+    restart: always
+    volumes:
+      - .:/jumbo_website
+      - ./static:/jumbo_website/static  # <-- bind the static volume
+      - ./media:/jumbo_website/media  # <-- bind the media volume
+    labels:
+      - "traefik.enable=false"
+
+  jumbo_nginx:
+    image: nginx:latest
+    container_name: jumbo_website_nginx
+    restart: always
+    volumes:
+      - ./config:/etc/nginx/conf.d
+      - ./static:/jumbo_website/static  # <-- bind the static volume
+      - ./media:/jumbo_website/media  # <-- bind the media volume
+    depends_on:
+      - jumbo_web
+    labels:
+      - "traefik.http.routers.jumbo_nginx.rule=Host(${SERVER_HOST})"
+      - "traefik.http.routers.jumbo_nginx.tls=true"
+      - "traefik.http.routers.jumbo_nginx.tls.certresolver=le"
+
+networks:
+  default:
+    external:
+      name: treafik

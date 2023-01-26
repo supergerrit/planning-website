@@ -1,0 +1,124 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+
+    {#    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">#}
+    {#    <script type="text/javascript" charset="utf8"#}
+    {#            src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>#}
+
+    <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+
+    {% include 'PlanningViewer/jssnip/datatable.html' %}
+
+    <div class="row">
+        <div class="col m8 offset-m2 s12">
+            <div class="card-panel">
+        <span class="card-title">
+            <b>Overzicht overuren (start: 2020/11)</b>
+        </span>
+
+                <table class="striped" id="table2">
+                    <thead>
+                    <tr>
+                        <th>Periode</th>
+                        <th>Datum</th>
+                        <th>Uren gewerkt ex. pauze</th>
+                        <th>Waarvan zondag</th>
+                        <th>Overuren</th>
+                        <th>Totaal</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for m in p_data %}
+                        <tr>
+                            <td>{{ m.periode }}</td>
+                            <td>{{ m.datum }}</td>
+                            <td>{{ m.netto_uur }}</td>
+                            <td>{% if m.totaal_zondag == "-" %}
+                                <a href="{% url 'overuren_delete' m.totaal_pauze %}"><i
+                                        class="material-icons">delete</i></a>
+                            {% else %}
+                                {{ m.totaal_zondag }}
+                            {% endif %}
+                            </td>
+                            <td>{{ m.overuren }}</td>
+                            <td>{{ m.acc }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="col m8 offset-m2 s12">
+            <div class="card-panel">
+        <span class="card-title">
+            <strong>Correctie toevoegen</strong>
+        </span>
+
+                <form method="POST" class="post-form">
+                    {% csrf_token %}
+                    <table border="1">
+                        {% for field in form %}
+                            <tr>
+                                <th>{{ field.label_tag }}</th>
+                                <td>
+                                    {% if field.errors %}
+                                        <ul>
+                                            {% for error in field.errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <br/>{{ field.help_text }}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <br>
+                    <button type="submit" class="save btn btn-default">Opslaan</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col m8 offset-m2 s12">
+            <p><i>Het overurenoverzicht is momenteel in testfase en kan hierdoor afwijken.</i></p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#table2').DataTable({
+                "paging": false,
+                "scrollX": true,
+                "searching": false
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('select').formSelect();
+        });
+
+        $('select').on('contentChanged', function () {
+            $(this).material_select();
+        });
+    </script>
+{% endblock %}

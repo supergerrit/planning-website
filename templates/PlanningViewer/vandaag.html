@@ -1,0 +1,80 @@
+{% extends 'PlanningViewer/base.html' %}
+
+{% block content %}
+
+    <style>
+        a {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+
+    <div class="row">
+        <div class="col m12 s12">
+            <div class="card-panel">
+                <p><i>Best te bekijken in landschapsmodus</i> <i class="small rotate_left">insert_chart</i></p>
+                <div style="height: 1000px">
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Libary #}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {# Load data #}
+    <script>
+        const labels = {{ data.0|safe }};
+
+        const data = {
+            labels: labels,
+            datasets: [{
+                label: 'Werktijden',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: {{ data.1|safe }},
+            }]
+        };
+
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                // Elements options apply to all of the options unless overridden in a dataset
+                // In this case, we are setting the border of each horizontal bar to be 2px wide
+                elements: {
+                    bar: {
+                        borderWidth: 2,
+                    }
+                },
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'De volgende personen zijn vandaag aanwezig'
+                    }
+                },
+                scales: {
+                    x: {
+                        min: 7,
+                        max: 22,
+                    },
+                    fullSize: true
+                }
+            },
+        };
+    </script>
+
+    {# View chart #}
+    <script>
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+    </script>
+
+{% endblock %}
