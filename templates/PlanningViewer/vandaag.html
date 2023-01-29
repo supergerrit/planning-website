@@ -15,22 +15,16 @@
                 {# <p><i>Best te bekijken in landschapsmodus</i> <i class="small rotate_left">insert_chart</i></p> #}
                 <div class="row">
 
-                    <div class="col m3 s3 offset-m1 offset-s1">
-                        <a href="{% url 'vandaag' %}?date={{ prev }}"><<<<</a>
+                    <div class="col m3 s2 offset-m1 offset-s1">
+                        <a href="{% url 'vandaag' %}?date={{ prev }}">
+                            <i class="material-icons">arrow_back</i>
+                        </a>
                     </div>
 
-                    <div class="col m4 s4">
-                        <form method="POST" class="post-form" id="form1">
+                    <div class="col m4 s6">
+                        <form method="POST" class="post-form" id="form1" novalidate>
                             {% csrf_token %}
                             {% for field in zoekdateform %}
-
-                                {% if field.errors %}
-                                    <ul>
-                                        {% for error in field.errors %}
-                                            <li>{{ error }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% endif %}
 
                                 {{ field }}
 
@@ -38,8 +32,10 @@
                         </form>
                     </div>
 
-                    <div class="col m3 s3">
-                        <a href="{% url 'vandaag' %}?date={{ next }}">>>>></a>
+                    <div class="col m3 s2">
+                        <a href="{% url 'vandaag' %}?date={{ next }}">
+                            <i class="material-icons">arrow_forward</i>
+                        </a>
                     </div>
                 </div>
                 {#  button type="submit" class="save btn btn-default">Zoeken</button>#}
@@ -117,7 +113,10 @@
 
     <script>
         $('#id_date').val("{{ date }}");
-        $('#id_date').attr("novalidate", "");
+
+        $(document).ready(function () {
+            $('select').formSelect();
+        });
     </script>
 
 {% endblock %}
