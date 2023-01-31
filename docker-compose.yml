@@ -24,7 +24,7 @@ services:
     depends_on:
       - jumbo_web
     labels:
-      - "traefik.http.routers.jumbo_nginx.rule=Host(${SERVER_HOST})"
+      - "traefik.http.routers.jumbo_nginx.rule=Host(`${SERVER_HOST}`)"
       - "traefik.http.routers.jumbo_nginx.tls=true"
       - "traefik.http.routers.jumbo_nginx.tls.certresolver=le"
 
