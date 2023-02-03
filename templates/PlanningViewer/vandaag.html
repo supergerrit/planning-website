@@ -12,7 +12,33 @@
     <div class="row">
         <div class="col m12 s12">
             <div class="card-panel">
-                <p><i>Best te bekijken in landschapsmodus</i> <i class="small rotate_left">insert_chart</i></p>
+                {# <p><i>Best te bekijken in landschapsmodus</i> <i class="small rotate_left">insert_chart</i></p> #}
+                <div class="row">
+
+                    <div class="col m3 s2 offset-m1 offset-s1">
+                        <a href="{% url 'vandaag' %}?date={{ prev }}">
+                            <i class="material-icons">arrow_back</i>
+                        </a>
+                    </div>
+
+                    <div class="col m4 s6">
+                        <form method="POST" class="post-form" id="form1" novalidate>
+                            {% csrf_token %}
+                            {% for field in zoekdateform %}
+
+                                {{ field }}
+
+                            {% endfor %}
+                        </form>
+                    </div>
+
+                    <div class="col m3 s2">
+                        <a href="{% url 'vandaag' %}?date={{ next }}">
+                            <i class="material-icons">arrow_forward</i>
+                        </a>
+                    </div>
+                </div>
+                {#  button type="submit" class="save btn btn-default">Zoeken</button>#}
                 <div style="height: 1000px">
                     <canvas id="myChart"></canvas>
                 </div>
@@ -75,6 +101,22 @@
             document.getElementById('myChart'),
             config
         );
+    </script>
+
+
+    <script>
+        $('#id_date').change(function () {
+            console.log('Submiting form');
+            $('#form1').submit();
+        });
+    </script>
+
+    <script>
+        $('#id_date').val("{{ date }}");
+
+        $(document).ready(function () {
+            $('select').formSelect();
+        });
     </script>
 
 {% endblock %}
