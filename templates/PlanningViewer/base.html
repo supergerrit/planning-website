@@ -32,21 +32,24 @@
         }
     </style>
 
-{% include "PlanningViewer/ph.html" %}
+    {% include "PlanningViewer/ph.html" %}
 
 </head>
 <body style="background-color: #FAFAFA">
 <nav class="light-blue lighten-1" role="navigation">
     <div class="nav-wrapper container"><a id="logo-container" href="{% url 'index' %}" class="brand-logo"><img
             src="{% static "jumboIcon.png" %}" alt="Jumbo Planning" width="auto" height="64"></a>
+
         <ul class="right hide-on-med-and-down">
             <li><a href="{% url 'index' %}">Overzicht</a></li>
             <li><a href="{% url 'nu_aanwezig' %}">Nu aanwezig</a></li>
+            <li><a href="{% url 'vandaag' %}">Dag overzicht</a></li>
             <li><a href="{% url 'zoeken' %}">Zoeken</a></li>
             <li><a href="{% url 'toevoegen' %}">Toevoegen</a></li>
             <li><a href="{% url 'stats' %}">Samenvatting</a></li>
             {% if request.user.usersettings.contract_uren > 0 %}
-                <li><a href="{% url 'overuren' %}">Overuren</a></li>{% endif %}
+                <li><a href="{% url 'overuren' %}">Overuren</a></li>
+            {% endif %}
             <li><a href="{% url 'tools' %}">Tools</a></li>
             <li><a href="{% url 'instellingen' request.user.usersettings.id %}">Instellingen</a></li>
             <li><a href="{% url 'logout' %}"><i class="material-icons">exit_to_app</i></a></li>
@@ -55,11 +58,13 @@
         <ul id="nav-mobile" class="sidenav">
             <li><a href="{% url 'index' %}">Overzicht</a></li>
             <li><a href="{% url 'nu_aanwezig' %}">Nu aanwezig</a></li>
+            <li><a href="{% url 'vandaag' %}">Dag overzicht</a></li>
             <li><a href="{% url 'zoeken' %}">Zoeken</a></li>
             <li><a href="{% url 'toevoegen' %}">Toevoegen</a></li>
             <li><a href="{% url 'stats' %}">Samenvatting</a></li>
             {% if request.user.usersettings.contract_uren > 0 %}
-                <li><a href="{% url 'overuren' %}">Overuren</a></li>{% endif %}
+                <li><a href="{% url 'overuren' %}">Overuren</a></li>
+            {% endif %}
             <li><a href="{% url 'tools' %}">Tools</a></li>
             <li><a href="{% url 'instellingen' request.user.usersettings.id %}">Instellingen</a></li>
             <li><a href="{% url 'logout' %}"><i class="material-icons">exit_to_app</i></a></li>
