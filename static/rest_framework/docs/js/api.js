@@ -124,27 +124,21 @@ $(function () {
           params[paramKey] = value
         }
       } else if (dataType === 'boolean' && paramValue) {
-        var value = {
-          'true': true,
-          'false': false
-        }[paramValue.toLowerCase()]
-        if (value !== undefined) {
-          params[paramKey] = value
-        }
-      } else if (dataType === 'array' && paramValue) {
-        try {
-          params[paramKey] = JSON.parse(paramValue)
-        } catch (err) {
-          // Ignore malformed JSON
-        }
-      } else if (dataType === 'object' && paramValue) {
-        try {
-          params[paramKey] = JSON.parse(paramValue)
-        } catch (err) {
-          // Ignore malformed JSON
-        }
+          var value = {
+              'true': true,
+              'false': false
+          }[paramValue.toLowerCase()]
+          if (value !== undefined) {
+              params[paramKey] = value
+          }
+      } else if ((dataType === 'array' && paramValue) || (dataType === 'object' && paramValue)) {
+          try {
+              params[paramKey] = JSON.parse(paramValue)
+          } catch (err) {
+              // Ignore malformed JSON
+          }
       } else if (dataType === 'string' && paramValue) {
-        params[paramKey] = paramValue
+          params[paramKey] = paramValue
       }
     }
 
