@@ -388,6 +388,10 @@ def ical_api(request):
 
         cal = Calendar()
 
+        # Add requierd iCal parameters
+        cal.add('prodid', '-//Werkijden Calendar Export//wexport.nl//')
+        cal.add('version', '2.0')
+
         for werktijd in werktijden:
             event = Event()
 
