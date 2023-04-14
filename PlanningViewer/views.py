@@ -392,8 +392,13 @@ def ical_api(request):
         cal.add('prodid', '-//Werkijden Calendar Export//wexport.nl//')
         cal.add('version', '2.0')
 
+        dtstamp = datetime.now().replace(tzinfo=amsterdam)
+
         for werktijd in werktijden:
             event = Event()
+
+            event.add('uid', '{}-{}@{}'.format(werktijd.id, datetime.now().year, os.getenv("SERVER_HOST")))
+            event.add('dtstamp', dtstamp)
 
             dtstart = datetime(werktijd.datum.year, werktijd.datum.month, werktijd.datum.day,
                                werktijd.begintijd.hour, werktijd.begintijd.minute, 0, tzinfo=amsterdam)
@@ -408,13 +413,13 @@ def ical_api(request):
             event.add('location', os.getenv("CALENDAR_LOCATION"))
             cal.add_component(event)
 
-        payoutEvent = Event()
+        payout_event = Event()
         closest, ndays = next_payout()
-        payoutEvent.add('summary', 'Salaris uitbetaling 💰')
-        payoutEvent.add('dtstart', datetime(closest.year, closest.month, closest.day, 9, 0, tzinfo=amsterdam))
-        payoutEvent.add('dtend', datetime(closest.year, closest.month, closest.day, 10, 0, tzinfo=amsterdam))
-        payoutEvent.add('description', 'Salaris uitbetaling! 💰')
-        cal.add_component(payoutEvent)
+        payout_event.add('summary', 'Salaris uitbetaling 💰')
+        payout_event.add('dtstart', datetime(closest.year, closest.month, closest.day, 9, 0, tzinfo=amsterdam))
+        payout_event.add('dtend', datetime(closest.year, closest.month, closest.day, 10, 0, tzinfo=amsterdam))
+        payout_event.add('description', 'Salaris uitbetaling! 💰')
+        cal.add_component(payout_event)
         return cal
 
     response = HttpResponse(create_ical(werktijden).to_ical(), content_type="text/calendar")
