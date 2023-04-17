@@ -19,7 +19,7 @@ from rest_framework.response import Response
 
 from PlanningViewer.forms import WerktijdForm, UploadForm, AddFav, UserSettingsForm, YearSelectForm, PersoonSelectForm, \
     DateSelectForm, UrenAdjustForm
-from .functions import get_period, get_period_now, maandelijkse_uren, get_period_data, calc_easter
+from .functions import get_period, get_period_now, maandelijkse_uren, get_period_data, calc_easter, next_payout
 from .models import Werktijd, Favoriet, ApiKey, UserSettings, OverurenAjust
 # Create your views here.
 from .serializers import WerktijdSerializers
@@ -445,17 +445,6 @@ def export_data(request):
         writer.writerow([wt.datum, wt.begintijd, wt.eindtijd, wt.week, wt.extra, wt.pauze, wt.totaal])
 
     return response
-
-
-def next_payout():
-    u = datetime.strptime("31-12-2020", "%d-%m-%Y")
-    d = timedelta(days=28)
-
-    dates = [(u + i * d).date() for i in range(0, 60)]
-    closest = min([d for d in dates if d >= date.today()], key=lambda x: abs(x - date.today()))
-    ndays = (closest - date.today()).days
-    return closest, ndays
-
 
 @login_required
 def tools(request):
