@@ -389,9 +389,11 @@ def ical_api(request):
         cal = Calendar()
 
         # Add requierd iCal parameters
-        cal.add('prodid', '-//Werkijden Calendar Export//wexport.nl//')
+        cal.add('prodid', '-//Werkijden Calendar//{}//'.format(os.getenv("SERVER_HOST")))
         cal.add('version', '2.0')
-
+        cal.add('calscale', 'GREGORIAN')
+        cal.add('name', 'Werktijden Calendar')
+        
         dtstamp = datetime.now().replace(tzinfo=amsterdam)
 
         for werktijd in werktijden:
@@ -415,8 +417,8 @@ def ical_api(request):
 
         payout_event = Event()
         closest, ndays = next_payout()
-        payout_event.add('uid', 'payout-{}-{}-{}@{}'.format(closest.year, closest.month, closest.day,
-                                                            os.getenv("SERVER_HOST")))
+
+        payout_event.add('uid', 'payout-{}-{}-{}@{}'.format(closest.year, closest.month, closest.day, os.getenv("SERVER_HOST")))
         payout_event.add('dtstamp', dtstamp)
         payout_event.add('summary', 'Salaris uitbetaling 💰')
         payout_event.add('dtstart', datetime(closest.year, closest.month, closest.day, 9, 0, tzinfo=amsterdam))
