@@ -8,7 +8,7 @@ django-debug-toolbar==4.0.0
 djangorestframework==3.14.0
 gunicorn==20.1.0
 icalendar==5.0.4
-mysqlclient==2.1.1
+mysqlclient==2.2.0
 pycparser==2.21
 python-dateutil==2.8.2
 python-dotenv==1.0.0
