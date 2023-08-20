@@ -31,7 +31,7 @@ DEBUG = False
 LOCAL = False
 
 ALLOWED_HOSTS = [os.getenv("SERVER_HOST"), 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv("SERVER_HOST")]
+CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv("SERVER_HOST"), 'http://localhost:8000']
 ADMINS = [('Jarno', os.getenv("EMAIL_USER"))]
 
 # Application definition
